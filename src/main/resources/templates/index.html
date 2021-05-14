@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Index</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/css/layui/css/layui.css}"  media="all">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon/favicon.ico}" media="screen" />
+    <script th:src="@{/js/layui.js}"></script>
+    <script th:src="@{/js/jQuery/jQuery.min.js}"></script>
+    <script th:src="@{/js/jQuery/jquery-cookie/jquery.cookie.js}"></script>
+</head>
+
+<body style="background-color: #f4f4f4;">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">远光优选</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a th:href="@{/user/mycart}">我的购物车</a></li>
+            <li class="layui-nav-item"><a th:href="@{/user/myorder}">我的订单</a></li>
+            <li class="layui-nav-item"><a th:href="@{/}">首页</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a th:href="@{/login}">
+                    <img th:src="${usersimg}!=null ? '/img/'+${usersimg} : '/img/userimg/defaultimg.jpg'" id="myimg" class="layui-nav-img">
+                    &emsp;&emsp;<span id="myname" th:text="${usersname}!=null ? ${usersname} : '点击登录'"></span>&emsp;&emsp;
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{/user/myinfo}">我的主页</a></dd>
+                    <dd><a th:href="@{/logout}">退出账号</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div style="margin-top: 60px">
+        <h1 class="site-h1" style="text-indent: 20px;margin-left: 20px;margin-bottom: 10px;line-height: 60px;color: #393D49;border-bottom: 1px solid #eee;font-size: 28px;font-weight: 300;">热门推荐</h1>
+    </div>
+    <div style="margin-top: 10px" class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md-offset3">
+                <div class="layui-carousel" id="test1" lay-filter="test1">
+                    <div carousel-item="">
+                        <div><img src="/img/banner/banner01.png" style="width: 100%;height: auto"></div>
+                        <div><img src="/img/banner/banner02.png" style="width: 100%;height: auto"></div>
+                        <div><img src="/img/banner/banner03.png" style="width: 100%;height: auto"></div>
+                        <div><img src="/img/banner/banner04.png" style="width: 100%;height: auto"></div>
+                        <div><img src="/img/banner/banner05.png" style="width: 100%;height: auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 10px">
+        <h1 class="site-h1" style="text-indent: 20px;margin-left: 20px;margin-bottom: 10px;line-height: 60px;color: #393D49;border-bottom: 1px solid #eee;font-size: 28px;font-weight: 300;">发现好货</h1>
+    </div>
+    <div>
+        <ul th:each="goodinfo:${goodsinfo}" style="display: block;list-style-type: disc;margin-block-start: 1em;margin-block-end: 1em;margin-inline-start: 0px;margin-inline-end: 0px;padding-inline-start: 40px;">
+            <li style="width: 190px;height: 266px;margin: 0 5px 8px;position: relative;float: left;background: #fff;">
+                <a th:href="@{/goods/detail/} + ${goodinfo.getGoods_num()}" style="color: #666;text-decoration: none;display: inline-block;width: 100%;height: 100%;">
+                    <div style="width: 120px;height: 120px;margin: 30px auto;display: block;">
+                        <img th:src="'\\img\\goodimg\\' + ${goodinfo.getGoods_img()}" style="width: 100%;height: auto;position: relative;float: left;">
+                    </div>
+                    <div style="line-height: 22px;padding: 0 10px;clear: both;height: 65px;">
+                        <p th:text="${goodinfo.getGoods_intro()}" style="text-align: left;color: #666;transition: color .2s ease;word-break: break-all;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"></p>
+                        <div style="line-height: 22px;margin-top: 10px;">
+                            <div style="float: left;text-align: left;display: inline-block;font-size: 16px;line-height: 18px;height: 18px;color: #e1251b;">
+                                <i>￥</i>
+                                <span th:text="${goodinfo.getGoods_price()}" style="font-weight: 700;font-family: arial,sans-serif;font-size: 16px;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <form action="@{/user/mycart}" method="post" id="form_cart"zaq>
+        <input type="hidden" name="username" id="username">
+    </form>
+</div>
+<script th:src="@{/js/layui.js}" charset="utf-8"></script>
+<script>
+    //JavaScript 代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d214947968792b839fd669a4decaaffc";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+<script>
+    function cookie() {
+        var cookie_user_value = $.cookie("cookie_user");
+        console.log(cookie_user_value);
+        if (cookie_user_value!=null&&cookie_user_value!=undefined) {
+            setCookie("cookie_user",cookie_user_value);
+            var cookie_user_values = cookie_user_value.toString().split("&");
+            var cookie_username = cookie_user_values[0];
+            var cookie_userimg = cookie_user_values[1] + "\\" + cookie_user_values[2];
+            $("#myimg").attr("src","\\img\\userimg\\"+cookie_userimg);
+            $("#myname").text(cookie_username);
+        }
+    }
+
+    function setCookie (name, value) {
+        var expdate = new Date();   //初始化时间
+        expdate.setTime(expdate.getTime() + 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + value + ";expires=" + expdate.toGMTString() + ";path=/";
+    }
+    cookie();
+</script>
+<script>
+    layui.use(['carousel', 'form'], function(){
+        var carousel = layui.carousel
+            ,form = layui.form;
+        carousel.render({
+            elem: '#test1'
+            ,arrow: 'always'
+        });
+    });
+</script>
+</body>
+</html>

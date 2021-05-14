@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>MyOrder</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/css/layui/css/layui.css}"  media="all">
+    <script th:src="@{/js/jQuery/jQuery.min.js}"></script>
+    <script th:src="@{/js/jQuery/jquery-cookie/jquery.cookie.js}"></script>
+</head>
+
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">远光优选</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a th:href="@{/user/mycart}">我的购物车</a></li>
+            <li class="layui-nav-item"><a th:href="@{/user/myorder}">我的订单</a></li>
+            <li class="layui-nav-item"><a th:href="@{/}">首页</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a th:href="@{/login}">
+                    <img th:src="${usersinfo.getUsers_img()}!=null ? '/img/userimg/'+${usersinfo.getUsers_img()} : '/img/userimg/defaultimg.jpg'" id="myimg" class="layui-nav-img">
+                    &emsp;&emsp;<span id="myname" th:text="${usersinfo.getUsers_name()}!=null ? ${usersinfo.getUsers_name()} : '点击登录'"></span>&emsp;&emsp;
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{/user/myinfo}">我的主页</a></dd>
+                    <dd><a th:href="@{/logout}">退出账号</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-tab" style="margin-top: 100px;margin-left: 5%;">
+        <ul class="layui-tab-title">
+<!--            1-正式订单  2-临时订单  3-已付款   4-待收货   5-已收货   6-已退货   7-已取消   8-已退款-->
+            <li class="layui-this">已付款</li>
+            <li>待收获</li>
+            <li>已收货</li>
+            <li>已退货</li>
+            <li>已取消</li>
+            <li>已退款</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+<!--                page: ture开启分页-->
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/3', page:true, id:'idTest'}" lay-filter="demo">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{fixed: 'right', width:200, align:'center', toolbar: '#barDemo'}"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+                <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">修改收货信息</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">取消订单</a>
+                </script>
+                <script>
+                    layui.use('table', function(){
+                        var table = layui.table;
+                        //监听工具条
+                        table.on('tool(demo)', function(obj){
+                            var data = obj.data;
+                            if(obj.event === 'del') {
+                                layer.confirm('确定要删除此订单吗？', function(index){
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/myorder/table/orders/changesd",
+                                        data: {
+                                            "data" : JSON.stringify(data),
+                                            "status" : 7,
+                                            "drawback" : 1
+                                        },
+                                        success: function(){
+                                            obj.del();
+                                            layer.close(index);
+                                        }
+                                    });
+                                });
+                            } else if(obj.event === 'edit'){
+                                window.location.href="change/" + getJsonValue(data,"addressees_id") + "/" + getJsonValue(data,"orders_id");
+                            }
+                        });
+                    });
+                    function getJsonValue(obj,name){
+                        var result = null;
+                        var value = null;
+                        for(let key in obj){
+                            value = obj[key];
+                            if(key == name){
+                                return value;
+                            } else {
+                                if( typeof value == "object" ){
+                                    result = getJsonValue(value,name);
+                                }
+                            }
+                        }
+                        return result;
+                    }
+                </script>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/4', page:true, id:'idTest0'}" lay-filter="demo0">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo0'}"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+                <script type="text/html" id="barDemo0">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">退货</a>
+                    <a class="layui-btn layui-btn layui-btn-xs" lay-event="confirm">确认收货</a>
+                </script>
+                <script>
+                    layui.use('table', function(){
+                        var table = layui.table;
+                        //监听工具条
+                        table.on('tool(demo0)', function(obj){
+                            var data = obj.data;
+                            if(obj.event === 'del'){
+                                layer.confirm('确定要删除此订单吗？', function(index){
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/myorder/table/orders/changesd",
+                                        data: {
+                                            "data" : JSON.stringify(data),
+                                            "status" : 6,
+                                            "drawback" : 0
+                                        },
+                                        success: function(){
+                                            obj.del();
+                                            layer.close(index);
+                                        }
+                                    });
+                                });
+                            } else if (obj.event === 'confirm'){
+                                layer.confirm('是否确认收获？', function(index){
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/myorder/table/orders/changes",
+                                        data: {
+                                            "data" : JSON.stringify(data),
+                                            "status" : 5,
+                                            "drawback" : 0
+                                        },
+                                        success: function(){
+                                            obj.del();
+                                            layer.close(index);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/5', page:true, id:'idTest1'}" lay-filter="demo1">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{field:'orders_sum', width:160, fixed: 'right'}">总价</th>
+                            <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo1'}"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+                <script type="text/html" id="barDemo1">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除订单</a>
+                </script>
+                <script>
+                    layui.use('table', function(){
+                        var table = layui.table;
+                        //监听工具条
+                        table.on('tool(demo1)', function(obj){
+                            var data = obj.data;
+                            if(obj.event === 'del'){
+                                layer.confirm('确定要删除此订单记录吗？', function(index){
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/myorder/table/orders/changev",
+                                        data: {
+                                            "data" : JSON.stringify(data),
+                                            "visible" : 0
+                                        },
+                                        success: function(){
+                                            obj.del();
+                                            layer.close(index);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/6', page:true, id:'idTest2'}" lay-filter="demo2">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{field:'orders_sum', width:160, fixed: 'right'}">总价</th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/7', page:true, id:'idTest3'}" lay-filter="demo3">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{field:'orders_sum', width:160e, fixed: 'right'}">总价</th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+            </div>
+            <div class="layui-tab-item">
+                <table class="layui-table" lay-data="{width: 1300, height:'400', url:'/myorder/table/orders/status/8', page:true, id:'idTest4'}" lay-filter="demo4">
+                    <thead>
+                        <tr>
+                            <th lay-data="{field:'goods_intro', width:540}">商品名称</th>
+                            <th lay-data="{field:'goods_price', width:140, sort: true}">商品价格</th>
+                            <th lay-data="{field:'orders_num' , width:140}">商品个数</th>
+                            <th lay-data="{field:'orders_time', width:200}">下单时间</th>
+                            <th lay-data="{field:'addressees_name' , width:140, sort: true}">收货人姓名</th>
+                            <th lay-data="{field:'addressees_address', width:240}">收货地址</th>
+                            <th lay-data="{field:'addressees_phone', width:160}">收获人电话</th>
+                            <th lay-data="{field:'orders_sum', width:120, fixed: 'right'}">总价</th>
+                            <th lay-data="{field:'orders_sum', width:160, fixed: 'right'}">总价</th>
+                            <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo4'}"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <script th:src="@{/css/layui/layui.js}" charset="utf-8"></script>
+                <script type="text/html" id="barDemo4">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除订单</a>
+                </script>
+                <script>
+                    layui.use('table', function(){
+                        var table = layui.table;
+                        //监听工具条
+                        table.on('tool(demo4)', function(obj){
+                            var data = obj.data;
+                            if(obj.event === 'del'){
+                                layer.confirm('确定要删除此订单记录吗？', function(index){
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/myorder/table/orders/changev",
+                                        data: {
+                                            "data" : JSON.stringify(data),
+                                            "visible" : 0
+                                        },
+                                        success: function(){
+                                            obj.del();
+                                            layer.close(index);
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //JavaScript 代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d214947968792b839fd669a4decaaffc";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+</html>

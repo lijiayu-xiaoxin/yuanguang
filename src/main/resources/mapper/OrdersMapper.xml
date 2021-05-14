@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abaaba.yuanguang.mapper.OrdersMapper">
+    <select id="getAllOrdersByUsersname" resultMap="orderGoodResultMap">
+        select *
+        from orders,goods
+        where orders_users = (select users_id from users where users_name = #{users_name})
+        and orders_status = #{orders_status}
+        and orders.orders_goods = goods.goods_num
+    </select>
+    <resultMap type="Orders" id="orderGoodResultMap">
+        <id column="orders_id" property="orders_id"/>
+        <result column="orders_goods" property="orders_goods"/>
+        <result column="orders_users" property="orders_users"/>
+        <result column="orders_status" property="orders_status"/>
+        <result column="orders_time" property="orders_time"/>
+        <result column="orders_num" property="orders_num"/>
+        <result column="orders_addressees" property="orders_addressees"/>
+        <result column="orders_sum" property="orders_sum"/>
+        <association property="goods" javaType="Goods">
+            <id column="goods_num" property="goods_num"/>
+            <result column="goods_img" property="goods_img"/>
+            <result column="goods_name" property="goods_name"/>
+            <result column="goods_intro" property="goods_intro"/>
+            <result column="goods_inventory" property="goods_inventory"/>
+            <result column="goods_sales" property="goods_sales"/>
+            <result column="goods_price" property="goods_price"/>
+            <result column="goods_exist" property="goods_exist"/>
+        </association>
+    </resultMap>
+
+    <delete id="deleteAOrdersById">
+        delete from orders
+        where orders_id = #{orders_id}
+    </delete>
+
+    <insert id="addAOrders" parameterType="Orders">
+        insert into orders(orders_goods,orders_users,orders_status,orders_time,orders_addressees,orders_num,orders_sum)
+        values (#{orders_goods},#{orders_users},#{orders_status},#{orders_time},#{orders_addressees},#{orders_num},#{orders_sum})
+    </insert>
+
+    <select id="getOrdersByUsername" resultMap="orderGoodAddresseeUserResultMap">
+        select *
+        from orders,goods,addressees,users
+        where orders_users = (select users_id from users where users_name = #{users_name})
+        and orders.orders_status = #{orders_status}
+        and orders.orders_goods = goods.goods_num
+        and orders.orders_addressees = addressees.addressees_id
+        and orders.orders_visible = '1'
+    </select>
+
+    <select id="getAOrdersById" resultMap="orderGoodAddresseeUserResultMap">
+        select *
+        from orders,goods,addressees,users
+        where orders_id = #{orders_id}
+        and orders.orders_goods = goods.goods_num
+        and orders.orders_addressees = addressees.addressees_id
+    </select>
+
+    <update id="changeOrdersStatus">
+        update orders
+        set orders_status = #{orders_status}
+        where orders_id = #{orders_id}
+    </update>
+
+    <update id="changeOrdersStatusAndDrawback">
+        update orders
+        set orders_status = #{orders_status},orders_drawback = #{orders_drawback}
+        where orders_id = #{orders_id}
+    </update>
+
+    <update id="changeOrdersVisible">
+        update orders
+        set orders_visible = #{orders_visible}
+        where orders_id = #{orders_id}
+    </update>
+
+    <update id="changeOrdersAddressees">
+        update orders
+        set orders_addressees = #{orders_addressees}
+        where orders_id = #{orders_id}
+    </update>
+
+    <select id="getOrdersByAddressees" resultType="Orders">
+        select *
+        from orders
+        where orders_addressees = #{addressees_id}
+    </select>
+
+    <select id="getOrdersByStatus" resultMap="orderGoodAddresseeUserResultMap">
+        select *
+        from orders,goods,addressees,users
+        where orders.orders_status = #{orders_status}
+        and orders.orders_goods = goods.goods_num
+        and orders.orders_addressees = addressees.addressees_id
+        and orders.orders_users = users.users_id
+    </select>
+    <resultMap type="Orders" id="orderGoodAddresseeUserResultMap">
+        <id column="orders_id" property="orders_id"/>
+        <result column="orders_goods" property="orders_goods"/>
+        <result column="orders_users" property="orders_users"/>
+        <result column="orders_status" property="orders_status"/>
+        <result column="orders_time" property="orders_time"/>
+        <result column="orders_num" property="orders_num"/>
+        <result column="orders_addressees" property="orders_addressees"/>
+        <result column="orders_sum" property="orders_sum"/>
+        <association property="goods" javaType="Goods">
+            <id column="goods_num" property="goods_num"/>
+            <result column="goods_img" property="goods_img"/>
+            <result column="goods_name" property="goods_name"/>
+            <result column="goods_intro" property="goods_intro"/>
+            <result column="goods_inventory" property="goods_inventory"/>
+            <result column="goods_sales" property="goods_sales"/>
+            <result column="goods_price" property="goods_price"/>
+        </association>
+        <association property="addressees" javaType="Addressees">
+            <id column="addressees_id" property="addressees_id"/>
+            <result column="addressees_name" property="addressees_name"/>
+            <result column="addressees_users" property="addressees_users"/>
+            <result column="addressees_address" property="addressees_address"/>
+            <result column="addressees_phone" property="addressees_phone"/>
+        </association>
+        <association property="users" javaType="Users">
+            <id column="users_id" property="users_id"/>
+            <result column="users_name" property="users_name"/>
+            <result column="users_phone" property="users_phone"/>
+        </association>
+    </resultMap>
+</mapper>

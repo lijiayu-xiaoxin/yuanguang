@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abaaba.yuanguang.mapper.GoodsMapper">
+    <select id="queryAllGoods" resultType="Goods">
+        select *
+        from goods
+        where goods_exist = "1"
+    </select>
+
+    <select id="queryAGoods" resultType="Goods" parameterType="Integer">
+        select *
+        from goods
+        where goods_num = #{goods_num}
+    </select>
+
+    <update id="changeGoodsSalesAndInventory">
+        update goods
+        set goods_sales = #{goods_sales},goods_inventory = #{goods_inventory}
+        where goods_num = #{goods_num}
+    </update>
+
+    <update id="changeGoodsExist">
+        update goods
+        set goods_exist = "0"
+        where goods_num = #{goods_num}
+    </update>
+
+    <insert id="addAGoods" parameterType="Goods">
+        insert into goods(goods_img,goods_name,goods_intro,goods_inventory,goods_sales,goods_price)
+        values (#{goods_img},#{goods_name},#{goods_intro},#{goods_inventory},#{goods_sales},#{goods_price})
+    </insert>
+</mapper>

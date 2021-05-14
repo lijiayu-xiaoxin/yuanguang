@@ -1,0 +1,4 @@
+.plus-minus .layui-input-block{ position: relative;}
+.plus-minus input{position: absolute;tap: 0px;left: 0px;text-align: center;}
+.plus-minus button:nth-of-type(1){ position: absolute;top: 0px;left: 0px; height: 100%;}
+.plus-minus button:last-child{ position: absolute;top: 0px;right: 0px;height: 100%;}

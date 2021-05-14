@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    username: root
+    password: MySQL123
+    url: jdbc:mysql://sh-cynosdbmysql-grp-ag6e4im6.sql.tencentcdb.com:29369/farlight?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abaaba.yuanguang.mapper.UsersMapper">
+    <select id="getAllUsers" resultType="Users">
+        select *
+        from users
+    </select>
+
+    <select id="getAUsers" resultType="Users" parameterType="String">
+        select *
+        from users
+        where users_name = #{users_name}
+    </select>
+
+    <insert id="addAUsers" parameterType="Users">
+        insert into users(users_name,users_gender,users_age,users_password,users_phone,users_img)
+        values (#{users_name},#{users_gender},#{users_age},#{users_password},#{users_phone},#{users_img})
+    </insert>
+
+    <update id="changeAUsers" parameterType="Users">
+        update users
+        set users_name = #{users_name},users_gender = #{users_gender},users_age = #{users_age},users_phone = #{users_phone}
+        where users_id = #{users_id}
+    </update>
+
+    <delete id="delAUsersById">
+        delete from users
+        where users_id = #{users_id}
+    </delete>
+
+    <update id="changePassById">
+        update users
+        set users_password = #{users_password}
+        where users_id = #{users_id}
+    </update>
+</mapper>

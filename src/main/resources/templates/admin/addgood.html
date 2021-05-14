@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AddGood</title>
+    <link rel="stylesheet" th:href="@{/css/layui/css/layui.css}"  media="all">
+    <script th:src="@{/js/jQuery/jquery.min.js}"></script>
+    <script th:src="@{/js/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+<div>
+    <form class="layui-form" th:action="@{/admin/goods/add}" method="post" style="margin-top: 50px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_name" required  lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text" style="width: 600px;">
+            <label class="layui-form-label">商品介绍：</label>
+            <div class="layui-input-block">
+                <textarea name="goods_intro" placeholder="请输入商品介绍" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品价格：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_price" required  lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品库存：</label>
+            <div class="layui-input-block" style="width: 100px;">
+                <input type="number" name="goods_inventory" value="1" step="1" max="100000000" min="1" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-upload" style="margin-left: 110px;">
+            <button type="button" class="layui-btn" id="test1">上传实图</button>
+            <div class="layui-upload-list" style="margin: 10px 0;">
+                <img class="layui-upload-img" id="demo1" style="width: 92px;height: 92px;margin: 0 10px 10px 0;margin-top: 0px;margin-right: 10px;margin-bottom: 10px;margin-left: 0px;">
+                <p id="demoText"></p>
+            </div>
+            <input type="hidden" id="goodimage" name="goods_img">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="submit" class="layui-btn" value="立即添加">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    layui.use(['upload', 'element', 'layer'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,layer = layui.layer;
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/uploadgoodimg/'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                $('#demoText').html(''); //置空上传失败的状态
+                var fileupload = $('#goodimage');
+                fileupload.attr("value",res.data.src);
+                console.log(fileupload.attr("value"));
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>login</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/logincss/normalize.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/logincss/demo.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/logincss/component.css}" />
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon/favicon.ico}" media="screen" />
+	<script th:src="@{/js/loginjs/html5.js}"></script>
+</head>
+
+<body>
+	<div class="container demo-1">
+		<div class="content">
+			<div id="large-header" class="large-header" th:style=" 'background-image: url(' + @{/img/loginimg/demo-1-bg.jpg} + ');' ">
+				<canvas id="demo-canvas"></canvas>
+				<div class="logo_box">
+					<h3>欢迎你</h3>
+					<form th:action="@{/index}" id="login_form" method="post">
+						<div class="input_outer">
+							<span class="u_user" th:style=" 'background: url(' + @{/img/loginimg/login_ico.png} + ');width: 25px;height: 25px;background-position:  -125px 0;position: absolute;margin: 10px 13px;'"></span>
+							<input name="logname" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
+						</div>
+						<div class="input_outer">
+							<span class="us_uer" th:style=" 'background-image: url(' + @{/img/loginimg/login_ico.png} + ');width: 25px;height: 25px;background-position: -125px -34px;position: absolute;margin: 10px 13px;'"></span>
+							<input name="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;"value="" type="password" placeholder="请输入密码">
+						</div>
+						<div>
+							<input type="checkbox" name="rememberMe" checked="checked">&emsp;记住我
+						</div>
+						<div>
+							<p>
+								<span><a th:href="@{/user/register}" style="color: #FFFFFF">注册&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</a></span>
+							</p>
+							<p>
+								<span th:text="${msg}" style="color: red"></span>
+							</p>
+						</div>
+						<div class="mb2"><a class="act-but submit" href="#" onclick="document.getElementById('login_form').submit();return false;" style="color: #FFFFFF">登录</a></div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div><!-- /container -->
+	<script th:src="@{/js/loginjs/TweenLite.min.js}"></script>
+	<script th:src="@{/js/loginjs/EasePack.min.js}"></script>
+	<script th:src="@{/js/loginjs/rAF.js}"></script>
+	<script th:src="@{/js/loginjs/demo-1.js}"></script>
+	<div style="text-align:center;"></div>
+</body>
+</html>

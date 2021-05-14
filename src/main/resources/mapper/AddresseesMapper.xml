@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="GBK" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abaaba.yuanguang.mapper.AddresseesMapper">
+    <select id="getAllAddressees" resultType="Addressees" parameterType="Integer">
+        select *
+        from addressees
+        where addressees_users = #{users_id}
+    </select>
+
+    <delete id="deleteAddresseesById">
+        delete from addressees
+        where addressees_id = #{addressees_id}
+    </delete>
+
+    <insert id="addAddressees" parameterType="Addressees">
+        insert into addressees(addressees_name,addressees_users,addressees_address,addressees_phone)
+        values (#{addressees_name},#{addressees_users},#{addressees_address},#{addressees_phone})
+    </insert>
+
+</mapper>

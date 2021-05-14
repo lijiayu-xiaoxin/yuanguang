@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>MyInfo</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/css/layui/css/layui.css}"  media="all">
+    <script th:src="@{/js/jQuery/jQuery.min.js}"></script>
+    <script th:src="@{/js/jQuery/jquery-cookie/jquery.cookie.js}"></script>
+</head>
+
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">远光优选</div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a th:href="@{/user/mycart}">我的购物车</a></li>
+            <li class="layui-nav-item"><a th:href="@{/user/myorder}">我的订单</a></li>
+            <li class="layui-nav-item"><a th:href="@{/}">首页</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a th:href="@{/login}">
+                    <img th:src="${usersinfo.getUsers_img()}!=null ? '/img/userimg/'+${usersinfo.getUsers_img()} : '/img/userimg/defaultimg.jpg'" id="myimg" class="layui-nav-img">
+                    &emsp;&emsp;<span id="myname" th:text="${usersinfo.getUsers_name()}!=null ? ${usersinfo.getUsers_name()} : '点击登录'"></span>&emsp;&emsp;
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{/user/myinfo}">我的主页</a></dd>
+                    <dd><a th:href="@{/logout}">退出账号</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div style="margin-top: 100px;margin-left: 50px;">
+        <form class="layui-form" action="/user/postchangeinfo">
+            <div class="layui-form-item">
+                <label class="layui-form-label">我的昵称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="users_name" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${usersinfo.getUsers_name()}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">我的年龄:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="users_age" required lay-verify="required" autocomplete="off" class="layui-input" th:value="${usersinfo.getUsers_age()}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">我的手机号:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="users_phone" required lay-verify="required" autocomplete="off" class="layui-input" th:value="${usersinfo.getUsers_phone()}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">我的性别:</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="users_gender" value="男" title="男" th:checked="${usersinfo.getUsers_gender() eq '男'}">
+                    <input type="radio" name="users_gender" value="女" title="女" th:checked="${usersinfo.getUsers_gender() eq '女'}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">我的收件人:</label>
+                <div class="layui-input-block" style="width: 200px;">
+                    <select name="adressees_users" lay-verify="required">
+                        <option th:each="addressees:${addresseesinfo}" th:text="${addressees.getAddressees_name()}" th:value="${addressees.getAddressees_id()}"/>
+                    </select>
+                </div>
+                <div class="layui-inline">
+                    <a style="margin-top: 20px;" href="/users/changeaddressees" class="layui-btn">添加收件人</a>
+                </div>
+            </div>
+            <div style="margin-top: -55px;margin-left: 100px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">修改完成</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/layui.js}" charset="utf-8"></script>
+<script>
+    //JavaScript 代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+
+    });
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d214947968792b839fd669a4decaaffc";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+</html>

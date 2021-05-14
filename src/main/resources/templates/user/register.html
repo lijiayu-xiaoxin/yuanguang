@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/registercss/commen.css}">
+    <link rel="stylesheet" th:href="@{/css/registercss/user_1.css}">
+    <link rel="stylesheet" th:href="@{/css/layui/css/layui.css}"  media="all">
+    <script th:src="@{/js/layui.js}" charset="utf-8"></script>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon/favicon.ico}" media="screen" />
+</head>
+
+<body >
+<div class="loginBox">
+    <div class="top">
+        <h2 align="center">欢迎注册</h2>
+        <h3 align="center" >已有注册，<a th:href="@{/login}">去登录></a></h3>
+    </div>
+    <div class="loginBody">
+        <div class="loginForm" >
+            <form th:action="@{/toregister}" method="post" id="register_form" class="layui-form">
+                <label for="username" class="label1">
+                    <input type="text" name="users_name" placeholder="请输入昵称" id="username">
+                    <span class="username">&nbsp;</span>
+                </label>
+                <label for="pass1">
+                    <input type="password" name="pass1" placeholder="密码由6-20位字母,数字和符号组合" id="pass1">
+                    <span class="pass1">&nbsp;</span>
+                </label>
+                <label for="pass2">
+                    <input type="password" name="users_password" placeholder="请再次输入上面的密码" id="pass2">
+                    <span class="pass2">&nbsp;</span>
+                </label>
+
+                <label for="age" class="label1">
+                    <input type="text" name="users_age" placeholder="请输入年龄" id="age">
+                    <span class="age">&nbsp;</span>
+                </label>
+
+                <label class="label1">
+                    <input type="text" name="users_phone" placeholder="请输入手机号码" id="telephoto">
+                    <span class="telephoto">&nbsp;</span>
+                </label>
+
+                <div class="layui-form-item" style="margin-left: -90px;">
+                    <div class="layui-input-block">
+                        <input type="radio" name="users_gender" value="男" title="男" checked="">
+                        <input type="radio" name="users_gender" value="女" title="女">
+                    </div>
+                </div>
+
+<!--                上传头像-->
+                <div class="layui-upload" style="margin-left: 20px;">
+                    <button type="button" class="layui-btn" id="test1">上传头像</button>
+                    <div class="layui-upload-list" style="margin: 10px 0;">
+                        <img class="layui-upload-img" id="demo1" style="width: 92px;height: 92px;margin: 0 10px 10px 0;margin-top: 0px;margin-right: 10px;margin-bottom: 10px;margin-left: 0px;">
+                        <p id="demoText"></p>
+                    </div>
+                    <input type="hidden" id="userimage" name="users_img">
+                </div>
+
+                <label>
+                    <input type="submit" value="立即注册" class="logNow">
+                </label>
+                <label>
+                    <input type="checkbox" checked><a href="#" class="readme">我已阅读并接受远光服务条款。</a>
+                </label>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:src="@{/js/jQuery/jquery.min.js}"></script>
+<!--文件上传-->
+<script>
+    layui.use(['upload', 'element', 'layer'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,layer = layui.layer;
+
+        //常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/uploaduserimg/'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                $('#demoText').html(''); //置空上传失败的状态
+                var fileupload = $('#userimage');
+                fileupload.attr("value",res.data.src);
+                console.log(fileupload.attr("value"));
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>
+<!--表单认证-->
+<script>
+    $(function() {
+
+        var pass1Bool = false;
+        var pass2Bool = false;
+        var teleBool = false;
+        var ageBool = false;
+
+        //手机号码正则验证
+        //bind() 方法为被选元素添加一个或多个事件处理程序，并规定事件发生时运行的函数
+        $('#telephoto').bind({
+            focus: function() {
+                $('.telephoto').css('display', 'block');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    // 手机号码
+                    var pattern3 = /^[1][345789][0-9]{9}$/;
+                    // 输入内容与正则进行验证
+                    if (pattern3.test(value)) {
+                        $('.telephoto').html('手机号码可以使用');
+                        $('#telephoto').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        teleBool = true;
+
+                    } else {
+                        $('.telephoto').html('手机号码不正确,请重新输入');
+                        $('#telephoto').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        teleBool = false;
+                    }
+                } else {
+                    $('.telephoto').html('请输入您的手机号码');
+                    teleBool = false;
+                }
+
+            },
+            blur: function() {
+                $('.telephoto').css('display', 'none');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    // 手机号码
+                    var pattern3 = /^[1][345789][0-9]{9}$/;
+                    // 输入内容与正则进行验证
+                    if (pattern3.test(value)) {
+                        teleBool = true;
+                        $('#telephoto').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        $('.button').addClass('able');
+                        $('.button').removeClass('disable');
+                    } else {
+                        $('#telephoto').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        $('.button').addClass('disable');
+                        $('.button').removeClass('able');
+                        teleBool = false;
+                    }
+                } else {
+                    $('.button').addClass('disable');
+                    $('.button').removeClass('able');
+                    teleBool = false;
+                }
+            }
+        });
+
+        // 验证密码
+        $('#pass1').bind({
+            focus: function() {
+                $('.pass1').css('display', 'block');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    // 6-20为字母数字下划线汉字的正则表达式
+                    var pattern2 = /^[a-zA-Z0-9@!#\$%\^&\*\(\)\.]{6,20}$/;
+                    // 输入内容与正则进行验证
+                    if (pattern2.test(value)) {
+                        $('.pass1').html('密码可用');
+                        $('#pass1').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        pass1Bool = true;
+                    } else {
+                        $('.pass1').html('密码为6-20位字母数字和符号的组合,格式不正确,请重新输入');
+                        $('#pass1').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        pass1Bool = false;
+                    }
+                } else {
+                    $('.pass1').html('密码为6-20位字母数字和符号的组合');
+                    pass1Bool = false;
+                }
+            },
+            blur: function() {
+                $('.pass1').css('display', 'none');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    // 6-20为字母数字下划线汉字的正则表达式
+                    var pattern2 = /^[a-zA-Z0-9@!#\$%\^&\*\(\)\.]{6,20}$/;
+                    // 输入内容与正则进行验证
+                    if (pattern2.test(value)) {
+                        $('#pass1').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        pass1Bool = true;
+                    } else {
+                        $('#pass1').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        pass1Bool = false;
+                    }
+                } else {
+                    pass1Bool = false;
+                }
+            },
+            // change:function(){
+
+            // }
+        });
+
+        // 验证两次密码是否一致
+        $('#pass2').bind({
+            focus: function() {
+                $('.pass2').css('display', 'block');
+                $('.pass2').html('请输入确认密码');
+                if ($('#pass1').val() && $(this).val() && pass1Bool) {
+                    if ($(this).val() == $('#pass1').val()) {
+                        $('.pass2').html('密码可用');
+                        $('#pass2').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        pass2Bool = true;
+                    } else {
+                        $('.pass2').html('两次输入密码不一致,需重新输入');
+                        $('#pass2').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        pass2Bool = false;
+                    }
+                }
+            },
+            blur: function() {
+                $('.pass2').css('display', 'none');
+                if ($('#pass1').val() && $(this).val() && pass1Bool) {
+                    if ($(this).val() == $('#pass1').val()) {
+                        $('#pass2').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        pass2Bool = true;
+                    } else {
+                        $('#pass2').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        pass2Bool = false;
+                    }
+                }
+            }
+        });
+
+        // #pass1的值改变时,#pass2再次验证
+        $('#pass1').change(function() {
+            if ($('#pass1').val() && $('#pass2').val() && pass1Bool) {
+                if ($('#pass1').val() == $('#pass2').val()) {
+                    $('.pass2').html('密码可以使用');
+                    $('#pass1').css({
+                        'border-color': '#f8dcb0',
+                        'background-color': '#fffbf3'
+                    });
+                    pass2Bool = true;
+                } else {
+                    $('.pass2').html('两次输入密码不一致,请重新输入');
+                    $('#pass1').css({
+                        'border-color': '#fca1a5',
+                        'background-color': '#ffe6e7'
+                    });
+                    pass2Bool = false;
+                }
+            }
+        });
+
+        $('#age').bind({
+            focus: function() {
+                $('.age').css('display', 'block');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    if (parseInt(value) >= 0) {
+                        $('.age').html('正确');
+                        $('#age').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        ageBool = true;
+
+                    } else {
+                        $('.age').html('请输入正确的年龄');
+                        $('#age').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        ageBool = false;
+                    }
+                } else {
+                    $('.age').html('请输入您的年龄');
+                    ageBool = false;
+                }
+            },
+            blur: function() {
+                $('.age').css('display', 'none');
+                if ($(this).val()) {
+                    var value = $(this).val();
+                    if (value >= 0) {
+                        $('.age').html('正确');
+                        $('#age').css({
+                            'border-color': '#f8dcb0',
+                            'background-color': '#fffbf3'
+                        });
+                        ageBool = true;
+
+                    } else {
+                        $('.age').html('请输入正确的年龄');
+                        $('#age').css({
+                            'border-color': '#fca1a5',
+                            'background-color': '#ffe6e7'
+                        });
+                        ageBool = false;
+                    }
+                } else {
+                    $('.age').html('请输入您的年龄');
+                    ageBool = false;
+                }
+            }
+        });
+
+        // 当有一项不符合时,阻止表单提交
+        $('#register_form').submit(function() {
+            console.log(pass1Bool,pass2Bool,teleBool,ageBool);
+            if (pass1Bool && pass2Bool && teleBool && ageBool) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    });
+</script>
+</html>
+
