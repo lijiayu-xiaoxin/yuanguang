@@ -51,6 +51,7 @@
         and orders.orders_visible = '1'
     </select>
 
+
     <select id="getAOrdersById" resultMap="orderGoodAddresseeUserResultMap">
         select *
         from orders,goods,addressees,users
