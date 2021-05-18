@@ -9,6 +9,7 @@
         where orders_users = (select users_id from users where users_name = #{users_name})
         and orders_status = #{orders_status}
         and orders.orders_goods = goods.goods_num
+        and orders.orders_visible = '1'
     </select>
     <resultMap type="Orders" id="orderGoodResultMap">
         <id column="orders_id" property="orders_id"/>
@@ -57,6 +58,7 @@
         where orders_id = #{orders_id}
         and orders.orders_goods = goods.goods_num
         and orders.orders_addressees = addressees.addressees_id
+        and orders.orders_visible = '1'
     </select>
 
     <update id="changeOrdersStatus">
@@ -87,6 +89,7 @@
         select *
         from orders
         where orders_addressees = #{addressees_id}
+        and orders.orders_visible = '1'
     </select>
 
     <select id="getOrdersByStatus" resultMap="orderGoodAddresseeUserResultMap">
@@ -96,6 +99,7 @@
         and orders.orders_goods = goods.goods_num
         and orders.orders_addressees = addressees.addressees_id
         and orders.orders_users = users.users_id
+        and orders.orders_visible = '1'
     </select>
     <resultMap type="Orders" id="orderGoodAddresseeUserResultMap">
         <id column="orders_id" property="orders_id"/>

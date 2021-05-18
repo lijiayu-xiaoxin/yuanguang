@@ -11,5 +11,6 @@ public interface GoodsService {
     int changeGoodsSalesAndInventory(int goods_num,int goods_sales,int goods_inventory);
     int changeGoodsExist(int goods_num);
     int addAGoods(Goods goods);
+    int editGoods(Goods goods);
 
 }

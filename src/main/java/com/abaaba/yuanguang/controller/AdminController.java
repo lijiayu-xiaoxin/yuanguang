@@ -43,8 +43,9 @@ public class AdminController {
         return "/admin/userlist";
     }
 
-    @RequestMapping("/member-edit")
-    public String toMemberEdit(){
+    @RequestMapping("/member-edit/{goods_num}")
+    public String toMemberEdit(@PathVariable("goods_num") int goods_num, Model model){
+        model.addAttribute("goods_num",goods_num);
         return "/admin/member-edit";
     }
 
@@ -125,11 +126,28 @@ public class AdminController {
         return "";
     }
 
+    @ResponseBody
+    @RequestMapping("/admin/orders/delall")
+    public String adminDelAllOrders(Model model,int[] ids){
+        for (int i = 0;i<ids.length;i++){
+            ordersService.changeOrdersVisible(ids[i],0);
+        }
+        return "";
+    }
+
     @PostMapping("/admin/goods/add")
     public String adminAddGoods(String goods_name,String goods_intro,float goods_price,int goods_inventory,String goods_img){
         Goods goods = new Goods(0,goods_img,goods_name,goods_intro,goods_inventory,0,goods_price,"1");
         goodsService.addAGoods(goods);
         return "redirect:/togoodlist";
+    }
+
+    @ResponseBody
+    @PostMapping("/admin/goods/edit")
+    public String adminEditGoods(int goods_num,String goods_name,String goods_intro,int goods_inventory,float goods_price){
+        Goods goods = new Goods(goods_num,"",goods_name,goods_intro,goods_inventory,0,goods_price,"1");
+        goodsService.editGoods(goods);
+        return "";
     }
 
     @ResponseBody
@@ -170,7 +188,7 @@ public class AdminController {
     @ResponseBody
     @RequestMapping("/admin/orders/drawback")
     public String adminOrdersDrawback(int id){
-        ordersService.changeOrdersStatus(id,8);
+        ordersService.changeOrdersStatusAndDrawback(id,8,0);
         return "";
     }
 

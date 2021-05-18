@@ -31,4 +31,10 @@
         insert into goods(goods_img,goods_name,goods_intro,goods_inventory,goods_sales,goods_price)
         values (#{goods_img},#{goods_name},#{goods_intro},#{goods_inventory},#{goods_sales},#{goods_price})
     </insert>
+
+    <update id="editGoods">
+        update goods
+        set goods_name = #{goods_name},goods_intro=#{goods_intro},goods_inventory=#{goods_inventory},goods_price=#{goods_price}
+        where goods_num = #{goods_num}
+    </update>
 </mapper>

@@ -64,9 +64,6 @@
                                 <td th:text="${userinfo.getUsers_phone()}"/>
                                 <td th:text="${userinfo.getUsers_autho()}"/>
                                 <td class="td-manage">
-                                    <a title="编辑" onclick="xadmin.open('编辑','/member-edit',600,400)" href="javascript:;">
-                                        <i class="layui-icon"></i>
-                                    </a>
                                     <a title="修改密码" th:onclick="'xadmin.open(&quot;修改密码&quot;,&quot;/member-password/' + ${userinfo.getUsers_id()} + '&quot;,600,400)'" href="javascript:;">
                                         <i class="layui-icon"></i>
                                     </a>

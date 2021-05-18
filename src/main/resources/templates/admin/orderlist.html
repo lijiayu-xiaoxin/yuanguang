@@ -42,9 +42,9 @@
                 </div>
                 <div class="layui-card-header">
                     <button class="layui-btn layui-btn-danger" onclick="delAll()">
-                        <i class="layui-icon"></i>批量删除</button>
-                    <button class="layui-btn" onclick="xadmin.open('添加用户','./order-add.html',800,600)">
-                        <i class="layui-icon"></i>添加</button></div>
+                        <i class="layui-icon"></i>批量删除
+                    </button>
+                </div>
                 <div class="layui-card-body ">
                     <table class="layui-table layui-form">
                         <thead>
@@ -67,7 +67,7 @@
                         <tbody>
                             <tr th:each="orderinfo:${ordersinfo}">
                                 <td>
-                                    <input type="checkbox" name="" lay-skin="primary"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon layui-icon-ok"></i></div>
+                                    <input type="checkbox" th:value="${orderinfo.getOrders_id()}" name="" lay-skin="primary"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon layui-icon-ok"></i></div>
                                 </td>
                                 <td th:text="${orderinfo.getOrders_id()}"/>
                                 <td th:text="${orderinfo.getGoods_name()}"/>
@@ -78,9 +78,6 @@
                                 <td th:text="${orderinfo.getOrders_time()}"/>
                                 <td th:text="${orderinfo.getOrders_num()}"/>
                                 <td th:text="${orderinfo.getOrders_sum()}"/>
-                                <!--<i class="layui-icon"></i>-->
-                                <!--<i class="layui-icon"></i>-->
-                                <!--<i class="layui-icon"></i>-->
                                 <td class="td-manage">
                                     <a title="发货" th:if="${orderinfo.getOrders_status() eq 3}" th:onclick="'order_deliver(this,' + ${orderinfo.getOrders_id()} + ')'" href="javascript:;">
                                         <i class="layui-icon"></i>
@@ -263,18 +260,29 @@
             });
     }
 
-    function delAll(argument) {
+    function delAll (argument) {
+        var ids = [];
 
-        var data = tableCheck.getData();
+        $('tbody input').each(function(index, el) {
+            if($(this).prop('checked')){
+                ids.push($(this).val())
+            }
+        });
 
-        layer.confirm('确认要删除吗？' + data,
-            function(index) {
-                //捉到所有被选中的，发异步进行删除
-                layer.msg('删除成功', {
-                    icon: 1
-                });
-                $(".layui-form-checked").not('.header').parents('tr').remove();
+        layer.confirm('确认要删除勾选的订单吗？',function(index){
+            $.ajax({
+                type: "GET",
+                url: "/admin/orders/delall",
+                data: {
+                    "ids" : ids,
+                },
+                traditional: true,
+                success: function(){
+                    layer.msg('删除成功', {icon: 1});
+                    $(".layui-form-checked").not('.header').parents('tr').remove();
+                }
             });
+        });
     }
 </script>
 </body>
