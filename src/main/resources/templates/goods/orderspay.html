@@ -34,7 +34,7 @@
         </ul>
     </div>
     <div style="margin-top: 100px;">
-        <form class="layui-form" action="">
+        <form class="layui-form" id="fPay" method="post" th:action="@{/user/orders/pay}">
             <div class="layui-form-item">
                 <label class="layui-form-label">总价:</label>
                 <div class="layui-input-block" style="width: 200px;">
@@ -43,7 +43,9 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <a class="layui-btn" th:href="@{/user/orders/pay/}+${orders.getOrders_id()}">立即付款</a>
+                    <input name="amount" type="hidden" value="10"/>
+                    <input name="orders_id" type="hidden" th:value="${orders.getOrders_id()}"/>
+                    <input class="layui-btn" type="submit" id="btn_submit" value="立即付款"/>
                     <a class="layui-btn" th:href="@{/user/orders/cancel/}+${orders.getOrders_id()}">取消</a>
                 </div>
             </div>

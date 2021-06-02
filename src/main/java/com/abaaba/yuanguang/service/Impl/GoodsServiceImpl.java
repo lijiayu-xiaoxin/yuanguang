@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -32,6 +33,11 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public int changeGoodsExist(int goods_num) {
         return goodsMapper.changeGoodsExist(goods_num);
+    }
+
+    @Override
+    public int changeAllGoodsExist(Map map) {
+        return goodsMapper.changeAllGoodsExist(map);
     }
 
     @Override

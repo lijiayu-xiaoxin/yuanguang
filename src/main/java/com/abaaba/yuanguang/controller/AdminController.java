@@ -64,11 +64,11 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping("/admin/users/delall")
-    public String adminDelAllUsers(int[] ids){
-        // 这里用sql语句一次性删完可能比较好一点
-        for (int i = 0;i<ids.length;i++){
-            usersService.delAUsersById(ids[i]);
-        }
+    public String adminDelAllUsers(Integer[] ids){
+        HashMap map = new HashMap();
+        List<Integer> users_id = new ArrayList<>(Arrays.asList(ids));
+        map.put("users_id",users_id);
+        usersService.delAllUsersById(map);
         return "";
     }
 
@@ -119,19 +119,21 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping("/admin/goods/delall")
-    public String adminDelAllGoods(Model model,int[] nums){
-        for (int i = 0;i<nums.length;i++){
-            goodsService.changeGoodsExist(nums[i]);
-        }
+    public String adminDelAllGoods(Integer[] nums){
+        HashMap map = new HashMap();
+        List<Integer> goods_num = new ArrayList<>(Arrays.asList(nums));
+        map.put("goods_num",goods_num);
+        goodsService.changeAllGoodsExist(map);
         return "";
     }
 
     @ResponseBody
     @RequestMapping("/admin/orders/delall")
-    public String adminDelAllOrders(Model model,int[] ids){
-        for (int i = 0;i<ids.length;i++){
-            ordersService.changeOrdersVisible(ids[i],0);
-        }
+    public String adminDelAllOrders(Integer[] ids){
+        HashMap map = new HashMap();
+        List<Integer> orders_id = new ArrayList<>(Arrays.asList(ids));
+        map.put("orders_id",orders_id);
+        ordersService.changeAllOrdersVisible(map);
         return "";
     }
 
@@ -210,13 +212,14 @@ public class AdminController {
 
                 String originalName = file.getOriginalFilename();
                 prefix=originalName.substring(originalName.lastIndexOf(".")+1);
-//                最好改成相对路径
-                String filepath = "C:\\Users\\Administrator\\IdeaProjects\\yuanguang\\src\\main\\resources\\static\\img\\goodimg\\" + dateStr + "\\" + uuid + "." + prefix;
+
+                String filepath = "src\\main\\resources\\static\\img\\goodimg\\" + dateStr + "\\" + uuid + "." + prefix;
                 File files=new File(filepath);
                 if(!files.getParentFile().exists()){
                     files.getParentFile().mkdirs();
                 }
-                file.transferTo(files);
+                File newFile = new File(files.getAbsolutePath());
+                file.transferTo(newFile);
                 Map<String,Object> map2 = new HashMap<>();
                 Map<String,Object> map = new HashMap<>();
                 map.put("code",0);

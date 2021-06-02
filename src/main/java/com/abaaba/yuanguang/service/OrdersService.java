@@ -3,6 +3,7 @@ package com.abaaba.yuanguang.service;
 import com.abaaba.yuanguang.pojo.Orders;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrdersService {
 
@@ -14,6 +15,7 @@ public interface OrdersService {
     int changeOrdersStatus(int orders_id,int orders_status);
     int changeOrdersStatusAndDrawback(int orders_id,int orders_status,int orders_drawback);
     int changeOrdersVisible(int orders_id,int orders_visible);
+    int changeAllOrdersVisible(Map map);
     int changeOrdersAddressees(int orders_id,int orders_addressees);
     List<Orders> getOrdersByAddressees(int addressees_id);
     List<Orders> getOrdersByStatus(int orders_status);

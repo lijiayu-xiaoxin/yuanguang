@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrdersServiceImpl implements OrdersService {
@@ -52,6 +53,11 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public int changeOrdersVisible(int orders_id, int orders_visible) {
         return ordersMapper.changeOrdersVisible(orders_id,orders_visible);
+    }
+
+    @Override
+    public int changeAllOrdersVisible(Map map) {
+        return ordersMapper.changeAllOrdersVisible(map);
     }
 
     @Override

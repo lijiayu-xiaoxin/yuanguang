@@ -30,6 +30,15 @@
         where users_id = #{users_id}
     </delete>
 
+    <delete id="delAllUsersById" parameterType="map">
+        delete from users
+        <where>
+            <foreach collection="users_id" item="users_id" open="and (" close=")" separator="or">
+                users_id = #{users_id}
+            </foreach>
+        </where>
+    </delete>
+
     <update id="changePassById">
         update users
         set users_password = #{users_password}

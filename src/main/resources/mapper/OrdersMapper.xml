@@ -79,6 +79,16 @@
         where orders_id = #{orders_id}
     </update>
 
+    <update id="changeAllOrdersVisible">
+        update orders
+        set orders_visible = '0'
+        <where>
+            <foreach collection="orders_id" item="orders_id" open="and (" close=")" separator="or">
+                orders_id = #{orders_id}
+            </foreach>
+        </where>
+    </update>
+
     <update id="changeOrdersAddressees">
         update orders
         set orders_addressees = #{orders_addressees}

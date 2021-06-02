@@ -52,13 +52,16 @@ public class RegisterController {
 
                 String originalName = file.getOriginalFilename();
                 prefix=originalName.substring(originalName.lastIndexOf(".")+1);
-//                最好改成相对路径
-                String filepath = "C:\\Users\\Administrator\\IdeaProjects\\yuanguang\\src\\main\\resources\\static\\img\\userimg\\" + dateStr + "\\" + uuid + "." + prefix;
+
+                String filepath = "src\\main\\resources\\static\\img\\userimg\\" + dateStr + "\\" + uuid + "." + prefix;
                 File files=new File(filepath);
+                System.out.println(files.getPath());
                 if(!files.getParentFile().exists()){
                     files.getParentFile().mkdirs();
                 }
-                file.transferTo(files);
+                File newFile = new File(files.getAbsolutePath());
+                System.out.println(newFile.getPath());
+                file.transferTo(newFile);
                 Map<String,Object> map2 = new HashMap<>();
                 Map<String,Object> map = new HashMap<>();
                 map.put("code",0);

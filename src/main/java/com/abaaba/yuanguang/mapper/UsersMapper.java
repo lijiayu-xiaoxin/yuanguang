@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -15,6 +16,7 @@ public interface UsersMapper {
     int addAUsers(Users users);
     int changeAUsers(Users users);
     int delAUsersById(int users_id);
+    int delAllUsersById(Map map);
     int changePassById(int users_id,String users_password);
 
 }

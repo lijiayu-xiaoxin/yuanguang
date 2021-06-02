@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -18,6 +19,7 @@ public interface OrdersMapper {
     int changeOrdersStatus(int orders_id,int orders_status);
     int changeOrdersStatusAndDrawback(int orders_id,int orders_status,int orders_drawback);
     int changeOrdersVisible(int orders_id,int orders_visible);
+    int changeAllOrdersVisible(Map map);
     int changeOrdersAddressees(int orders_id,int orders_addressees);
     List<Orders> getOrdersByAddressees(int addressees_id);
     List<Orders> getOrdersByStatus(int orders_status);

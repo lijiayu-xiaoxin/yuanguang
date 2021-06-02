@@ -27,6 +27,16 @@
         where goods_num = #{goods_num}
     </update>
 
+    <update id="changeAllGoodsExist">
+        update goods
+        set goods_exist = "0"
+        <where>
+            <foreach collection="goods_num" item="goods_num" open="and (" close=")" separator="or">
+                goods_num = #{goods_num}
+            </foreach>
+        </where>
+    </update>
+
     <insert id="addAGoods" parameterType="Goods">
         insert into goods(goods_img,goods_name,goods_intro,goods_inventory,goods_sales,goods_price)
         values (#{goods_img},#{goods_name},#{goods_intro},#{goods_inventory},#{goods_sales},#{goods_price})
